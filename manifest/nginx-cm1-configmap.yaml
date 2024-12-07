@@ -1,0 +1,8 @@
+apiVersion: v1
+data:
+  default.conf: "# basic config for a PHP application served by Nginx and PHP-FPM (FastCGI Process Manager).\nserver {\n    listen 80;\n    server_name localhost;\n\n    # the default response file when client requests to a directory rather than a file (e.g. /about/ instead of /about.html)\n    index index.php index.html index.htm;\n\n    # directory for logs\n    error_log /var/log/nginx/error.log;\n    access_log /var/log/nginx/access.log;\n    \n    # root directory for the application (./src/public/index.php)\n    root /var/www/public;\n\n    # how to respond to requests for the root URL (/).\n    location / {\n        try_files $uri $uri/ /index.php?$query_string;\n    }\n\n    # how to respond to requests for PHP files.\n    location ~ \\.php$ {\n        # fastcgi_* directives are used to pass the request to a FastCGI server (server on app:9000)\n      try_files $uri = 404;\n      fastcgi_split_path_info ^(.+\\.php)(/.+)$;\n      fastcgi_pass app:9000;\n      fastcgi_index index.php;\n      include fastcgi_params;\n      fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;\n      fastcgi_param PATH_INFO $fastcgi_path_info;\n    }\n}"
+kind: ConfigMap
+metadata:
+  labels:
+    io.kompose.service: nginx
+  name: nginx-cm1
