@@ -1,3 +1,4 @@
+#!/bin/bash 
 sudo swapoff -a
 sudo modprobe br_netfilter
 sudo modprobe overlay
